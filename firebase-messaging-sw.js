@@ -39,11 +39,17 @@ messaging.onBackgroundMessage((payload) => {
         '[firebase-messaging-sw.js] ---->',
         payload
     );
-    const notificationTitle = 'Detto del giorno';
+    const notificationTitle = 'Detto di oggi';
     const notificationOptions = {
         body: payload.notification.body,
         icon: `/pwa/pwa-64x64.png`
     };
 
-    self.registration.showNotification(notificationTitle, notificationOptions);
+    return self.registration.getNotifications().then(
+        (notifications) => {
+            notifications.forEach((notification) => {
+                notification.close();
+            });
+            self.registration.showNotification(notificationTitle, notificationOptions);
+        });
 });
