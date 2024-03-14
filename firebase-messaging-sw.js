@@ -39,10 +39,10 @@ messaging.onBackgroundMessage((payload) => {
         '[firebase-messaging-sw.js] ---->',
         payload
     );
-    const notificationTitle = 'Detto del giorno 2';
+    const notificationTitle = 'Detto del giorno';
     const notificationOptions = {
-        body: JSON.stringify(payload),
-        icon: '/pwa/pwa-64x64.png'
+        body: payload.notification.body,
+        icon: `/pwa/pwa-64x64.png`
     };
 
     self.registration.showNotification(notificationTitle, notificationOptions);
