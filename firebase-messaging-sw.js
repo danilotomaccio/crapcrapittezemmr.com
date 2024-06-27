@@ -31,6 +31,21 @@ self.addEventListener("notificationclick", (notificationEvent) => {
     console.log(notificationEvent);
     notificationEvent.notification.close();
     open(notificationEvent, `${self.origin}/#/`);
+
+    notificationEvent.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+            if (clientList.length > 0) {
+                let client = clientList.find(c => c.visibilityState === 'visible');
+                if (client) {
+                    return client.focus();
+                } else {
+                    return clients.openWindow(`${self.origin}/#/`);
+                }
+            } else {
+                return clients.openWindow(`${self.origin}/#/`);
+            }
+        })
+    );
 });
 
 
