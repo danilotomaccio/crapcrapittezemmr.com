@@ -30,7 +30,6 @@ function open(event, url) {
 self.addEventListener("notificationclick", (notificationEvent) => {
     console.log(notificationEvent);
     notificationEvent.notification.close();
-    open(notificationEvent, `${self.origin}/#/`);
 
     notificationEvent.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
@@ -46,6 +45,8 @@ self.addEventListener("notificationclick", (notificationEvent) => {
             }
         })
     );
+
+    open(notificationEvent, `${self.origin}/#/`);
 });
 
 
