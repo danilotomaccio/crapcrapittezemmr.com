@@ -27,27 +27,22 @@ function open(event, url) {
     }());
 }
 
-self.addEventListener("notificationclick", (notificationEvent) => {
-    console.log(notificationEvent);
-    notificationEvent.notification.close();
+self.addEventListener("notificationclick", (event) => {
+  console.log(event);
+  event.notification.close();
 
-    notificationEvent.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-            if (clientList.length > 0) {
-                let client = clientList.find(c => c.visibilityState === 'visible');
-                if (client) {
-                    return client.focus();
-                } else {
-                    return clients.openWindow(`${self.origin}/#/`);
-                }
-            } else {
-                return clients.openWindow(`${self.origin}/#/`);
-            }
-        })
-    );
-
-    open(notificationEvent, `${self.origin}/#/`);
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url === `${self.location.origin}/#/` && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      return clients.openWindow(`${self.location.origin}/#/`);
+    })
+  );
 });
+
 
 
 function getDayOfYear(date) {
